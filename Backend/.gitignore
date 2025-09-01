@@ -1,0 +1,64 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+.eggs/
+
+# Virtual environment
+venv/
+env/
+.venv/
+ENV/
+
+# IDE / Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Byte-compiled / cache
+*.log
+*.pot
+*.pyc
+*.pkl
+*.db
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment variables / configs
+.env
+.env.local
+.env.*.local
+secrets.json
+
+# Coverage / testing
+htmlcov/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+
+# Migrations
+migrations/
+alembic/
+alembic.ini
+
+# Database
+*.sqlite3
+*.db
+*.sql
+
+# Uploads (if storing locally)
+uploads/
+files/
+media/
