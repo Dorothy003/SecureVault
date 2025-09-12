@@ -1,0 +1,10 @@
+fastapi==0.109.2
+uvicorn==0.24.0
+presidio-analyzer==2.3.1
+presidio-anonymizer==2.3.1
+PyPDF2==3.1.0
+intervaltree==3.2.0
+python-multipart==0.0.6
+pycryptodome==3.19.0
+cryptography==41.0.3
+databases[sqlite]==1.2.2
