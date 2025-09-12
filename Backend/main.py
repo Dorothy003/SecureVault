@@ -177,7 +177,7 @@ def download_file(
 
   
     try:
-        priv_pem = decrypt_private_key(
+        priv_pem = decrypt_private_key( 
             salt=current_user.enc_priv_salt,
             nonce=current_user.enc_priv_nonce,
             cipher=current_user.enc_priv_cipher,
