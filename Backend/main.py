@@ -84,6 +84,7 @@ def register(payload: RegisterIn, db: Session = Depends(get_db)):
 @app.post("/auth/login")
 def login(payload: LoginIn, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == payload.email).first()
+    print(user)
     if not user or not verify_password(payload.password, user.hash_password):
         raise HTTPException(status_code=401, detail="Invalid credential")
     token = create_access_token(subject=user.email, role=user.role)
@@ -160,7 +161,6 @@ def download_file(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user_db)
 ):
-  
     f = db.query(FileModel).filter(FileModel.id == file_id).first()
     if not f:
         raise HTTPException(status_code=404, detail="File not found")
@@ -301,6 +301,7 @@ def share(
     db.add(fk_recipient)
     db.commit()
     return {"detail":f"File is shared woth {recipent_email} successfully"}
+
 @app.get("/health")
 def health():
     return {"status": "Server is running"}
