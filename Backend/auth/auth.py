@@ -1,7 +1,7 @@
 from curses import tparm
 from curses.ascii import HT
 import email
-from warnings import deprecated
+
 import jwt
 from passlib.context import CryptContext
 from fastapi import HTTPException,status,Depends

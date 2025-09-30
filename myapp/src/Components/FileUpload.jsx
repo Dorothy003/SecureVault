@@ -20,7 +20,7 @@ const FileUpload = ({onUpload}) => {
     }
   return (
     <div className='bg-white shadow-md rounded-lg p-4 mb-6'>
-        <h2 className='text-lg font-bold mb-2'>Upload file</h2>
+        <h2 className='text-lg font-bold mb-2 text-white'>Upload file</h2>
         <input
          type='file'
          onChange={(e)=>setFile(e.target.files[0])}

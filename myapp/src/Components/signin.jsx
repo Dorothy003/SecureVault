@@ -14,10 +14,10 @@ const SignUp = () => {
   const handleSignUp = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('/auth/signup', form);
+      const res = await axios.post('/auth/register', form);
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('user', JSON.stringify(res.data.user));
-      navigate('/personalPage');
+      navigate('/dashboard');
       toast.success("Signup Successfull")
     } catch (error) {
       toast.error("Error in SignUp")
