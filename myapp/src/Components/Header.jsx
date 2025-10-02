@@ -8,13 +8,16 @@ const Header = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    navigate("/signin");
+    navigate("/signin"); 
   };
 
   return (
-     <div className="flex justify-between items-center">
+    <div className="flex justify-between items-center">
       <h1 className="text-white font-bold text-lg">Dashboard</h1>
-      <button className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">
+      <button
+        onClick={handleLogout}   
+        className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded"
+      >
         Logout
       </button>
     </div>

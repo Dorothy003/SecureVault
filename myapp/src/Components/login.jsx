@@ -8,21 +8,23 @@ const SignIn = () => {
   const navigate=useNavigate();
   const [form , setForm]=useState({email:'',password:''})
 
-  const handleSignIn=async(e)=>{
-    e.preventDefault()
-    try {
-      const res=await axios.post('/auth/login',form);
-      localStorage.setItem('token',res.data.token)
-      localStorage.setItem('user',JSON.stringify(res.data.user))
-      toast.success("Login In Successfull")
-      navigate('/dashboard')
-      } catch (error) {
-          toast.error("Login Failed Invalid details")
-          console.log(error)
-        
-    }
-    
+ const handleSignIn = async (e) => {
+  e.preventDefault();
+  try {
+    const res = await axios.post('/auth/login', form);
+
+    // Backend returns { access_token, token_type }
+    localStorage.setItem('token', res.data.access_token);
+    localStorage.setItem('token_type', res.data.token_type);
+
+    toast.success("Login Successful");
+    navigate('/dashboard');
+  } catch (error) {
+    toast.error("Login Failed: Invalid details");
+    console.log(error.response?.data || error.message);
   }
+};
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0f172a] text-white">
       <div className='bg-[#1e293b] p-8 rounded-xl shadow-lg w-full max-w-md'>

@@ -7,7 +7,6 @@ const UploadSection = () => {
   const [privateKey, setPrivateKey] = useState("");
   const [fileId, setFileId] = useState("");
 
-  // Handle file selection
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile && selectedFile.type === "text/plain") {
@@ -21,7 +20,7 @@ const UploadSection = () => {
     }
   };
 
-  // Handle send button
+  
   const handleSend = () => {
     if (!file || !receiver || !privateKey || !fileId) {
       alert("Please fill all fields and upload a file.");

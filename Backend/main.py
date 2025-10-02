@@ -36,7 +36,7 @@ Base.metadata.create_all(bind=engine)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -80,14 +80,31 @@ def register(payload: RegisterIn, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(user)
     return user
-
 @app.post("/auth/login")
 def login(payload: LoginIn, db: Session = Depends(get_db)):
+    print("DEBUG: login payload =", payload.dict())
     user = db.query(User).filter(User.email == payload.email).first()
+    if not user:
+        print("DEBUG: user not found")
+    elif not verify_password(payload.password, user.hash_password):
+        print("DEBUG: password mismatch")
+    else:
+        print("DEBUG: login success for", user.email)
+
     if not user or not verify_password(payload.password, user.hash_password):
         raise HTTPException(status_code=401, detail="Invalid credential")
+
     token = create_access_token(subject=user.email, role=user.role)
-    return {"access_token": token, "token_type": "bearer"}
+
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+        "user": {
+            "id": user.id,
+            "email": user.email,
+            "role": user.role
+        }
+    }
 
 @app.get("/me", response_model=UserOut)
 def me(current_user: User = Depends(_get_current_user)):
