@@ -1,12 +1,8 @@
-// src/components/Header.jsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const navigate = useNavigate();
-
-  const user = JSON.parse(localStorage.getItem("user") || "{}"); 
-  const username = user.email || "User"; 
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -17,7 +13,7 @@ const Header = () => {
   return (
     <div className="flex justify-between items-center">
       <h1 className="text-white font-bold text-lg">
-        Welcome to the Dashboard, {username}!
+        Dashboard
       </h1>
       <button
         onClick={handleLogout}
