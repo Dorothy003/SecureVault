@@ -17,7 +17,7 @@ from auth.auth import (
     hash_password, verify_password, create_access_token, get_current_user, require_role
 )
 from fastapi import Body
-
+from fastapi import Path
 from crypto import (
     encrypt_private_key, decrypt_private_key,
     aesgcm_encrypt, aesgcm_decrypt,
@@ -321,3 +321,17 @@ def share(
 @app.get("/health")
 def health():
     return {"status": "Server is running"}
+@app.get("/received")
+def list_received_files(db: Session = Depends(get_db), current_user: User = Depends(get_current_user_db)):
+    fk_rows = db.query(FileKey).filter(FileKey.user_id == current_user.id).all()
+    results = []
+    for fk in fk_rows:
+        f = fk.file
+        if f:
+            results.append({
+                "file_id": f.id,
+                "filename": f.filename,
+                "owner_email": f.owner.email if f.owner else None,
+                "sha256": f.sha256
+            })
+    return {"received": results}
