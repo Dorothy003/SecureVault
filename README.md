@@ -1,20 +1,42 @@
-<h1>Secure Vault</h1>
-<p>Internal Saas for secure file sharing and downloading</p>
-<p>Feautes</p>
-<ol><li>
-  Secure file encryption using hybrid (RSA+AES) techniques(Done)  
-</li><li>
-  File downloading (Done)
-</li><li>
-  Secure file sharing and decryption of other files (Done)
-</li>
-  <li>
-    Selective encryption of files (Not done)
-  </li>
-  <li>
-    End to End Encrypted Chat(Not done)
-  </li>
-  <li>
-    a react Dashboard for all the above feauters(Not done)
-  </li>
-</ol>
+Secure Vault
+
+**Secure Vault** is an internal SaaS platform for **secure file sharing and downloading**, built with a focus on **privacy, encryption, and data protection**.
+
+---
+
+## 🚀 Features
+
+- **🔐 Hybrid Encryption (RSA + AES)**  
+  Files are encrypted using a hybrid encryption model combining the efficiency of AES (symmetric) and the security of RSA (asymmetric).  
+
+- **⬇️ Secure File Downloading**  
+  Users can safely download encrypted files with built-in integrity verification.  
+
+- **📤 Secure File Sharing & Decryption**  
+  Authorized users can share encrypted files and decrypt received ones securely using their private keys.  
+
+- **📊 React Dashboard**  
+  A modern, user-friendly React dashboard for managing uploads, downloads, and encryption operations seamlessly.  
+
+---
+Secure Vault
+
+**Secure Vault** is an internal SaaS platform for **secure file sharing and downloading**, built with a focus on **privacy, encryption, and data protection**.
+
+---
+
+## 🚀 Features
+
+- **🔐 Hybrid Encryption (RSA + AES)**  
+  Files are encrypted using a hybrid encryption model combining the efficiency of AES (symmetric) and the security of RSA (asymmetric).  
+
+- **⬇️ Secure File Downloading**  
+  Users can safely download encrypted files with built-in integrity verification.  
+
+- **📤 Secure File Sharing & Decryption**  
+  Authorized users can share encrypted files and decrypt received ones securely using their private keys.  
+
+- **📊 React Dashboard**  
+  A modern, user-friendly React dashboard for managing uploads, downloads, and encryption operations seamlessly.  
+
+---
