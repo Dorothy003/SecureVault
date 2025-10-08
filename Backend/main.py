@@ -24,6 +24,7 @@ from crypto import (
     rsa_encrypt, rsa_decrypt,
     sha256_hex, generate_rsa_keypair
 )
+from fastapi import status
 
 def b64e(data: bytes) -> str:
     return base64.b64encode(data).decode("utf-8")
@@ -59,14 +60,17 @@ def role_required(*roles: str):
             raise HTTPException(status_code=403, detail="insufficient permissions")
         return user
     return dep
-
-@app.post("/auth/register", response_model=UserOut, status_code=201)
+@app.post("/auth/register", status_code=status.HTTP_201_CREATED)
 def register(payload: RegisterIn, db: Session = Depends(get_db)):
+    # Check if email exists
     if db.query(User).filter(User.email == payload.email).first():
-        raise HTTPException(status_code=400, detail="Email already Registered")
+        raise HTTPException(status_code=400, detail="Email already registered")
+
+    # Hash password & generate keys
     hashed_pw = hash_password(payload.password)
     priv_pem, pub_pem = generate_rsa_keypair()
     salt, nonce, cipher = encrypt_private_key(priv_pem, payload.password)
+
     user = User(
         email=payload.email,
         hash_password=hashed_pw,
@@ -79,7 +83,20 @@ def register(payload: RegisterIn, db: Session = Depends(get_db)):
     db.add(user)
     db.commit()
     db.refresh(user)
-    return user
+
+    # Generate JWT token
+    token = create_access_token(subject=user.email, role=user.role)
+
+    # Return both user and token
+    return {
+        "user": {
+            "id": user.id,
+            "email": user.email,
+            "role": user.role
+        },
+        "access_token": token,
+        "token_type": "bearer"
+    }
 @app.post("/auth/login")
 def login(payload: LoginIn, db: Session = Depends(get_db)):
     print("DEBUG: login payload =", payload.dict())
