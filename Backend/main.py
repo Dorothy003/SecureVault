@@ -17,13 +17,14 @@ from auth.auth import (
     hash_password, verify_password, create_access_token, get_current_user, require_role
 )
 from fastapi import Body
-
+from fastapi import Path
 from crypto import (
     encrypt_private_key, decrypt_private_key,
     aesgcm_encrypt, aesgcm_decrypt,
     rsa_encrypt, rsa_decrypt,
     sha256_hex, generate_rsa_keypair
 )
+from fastapi import status
 
 def b64e(data: bytes) -> str:
     return base64.b64encode(data).decode("utf-8")
@@ -36,7 +37,7 @@ Base.metadata.create_all(bind=engine)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -59,14 +60,17 @@ def role_required(*roles: str):
             raise HTTPException(status_code=403, detail="insufficient permissions")
         return user
     return dep
-
-@app.post("/auth/register", response_model=UserOut, status_code=201)
+@app.post("/auth/register", status_code=status.HTTP_201_CREATED)
 def register(payload: RegisterIn, db: Session = Depends(get_db)):
+    # Check if email exists
     if db.query(User).filter(User.email == payload.email).first():
-        raise HTTPException(status_code=400, detail="Email already Registered")
+        raise HTTPException(status_code=400, detail="Email already registered")
+
+    # Hash password & generate keys
     hashed_pw = hash_password(payload.password)
     priv_pem, pub_pem = generate_rsa_keypair()
     salt, nonce, cipher = encrypt_private_key(priv_pem, payload.password)
+
     user = User(
         email=payload.email,
         hash_password=hashed_pw,
@@ -79,15 +83,45 @@ def register(payload: RegisterIn, db: Session = Depends(get_db)):
     db.add(user)
     db.commit()
     db.refresh(user)
-    return user
 
+    # Generate JWT token
+    token = create_access_token(subject=user.email, role=user.role)
+
+    # Return both user and token
+    return {
+        "user": {
+            "id": user.id,
+            "email": user.email,
+            "role": user.role
+        },
+        "access_token": token,
+        "token_type": "bearer"
+    }
 @app.post("/auth/login")
 def login(payload: LoginIn, db: Session = Depends(get_db)):
+    print("DEBUG: login payload =", payload.dict())
     user = db.query(User).filter(User.email == payload.email).first()
+    if not user:
+        print("DEBUG: user not found")
+    elif not verify_password(payload.password, user.hash_password):
+        print("DEBUG: password mismatch")
+    else:
+        print("DEBUG: login success for", user.email)
+
     if not user or not verify_password(payload.password, user.hash_password):
         raise HTTPException(status_code=401, detail="Invalid credential")
+
     token = create_access_token(subject=user.email, role=user.role)
-    return {"access_token": token, "token_type": "bearer"}
+
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+        "user": {
+            "id": user.id,
+            "email": user.email,
+            "role": user.role
+        }
+    }
 
 @app.get("/me", response_model=UserOut)
 def me(current_user: User = Depends(_get_current_user)):
@@ -304,3 +338,17 @@ def share(
 @app.get("/health")
 def health():
     return {"status": "Server is running"}
+@app.get("/received")
+def list_received_files(db: Session = Depends(get_db), current_user: User = Depends(get_current_user_db)):
+    fk_rows = db.query(FileKey).filter(FileKey.user_id == current_user.id).all()
+    results = []
+    for fk in fk_rows:
+        f = fk.file
+        if f:
+            results.append({
+                "file_id": f.id,
+                "filename": f.filename,
+                "owner_email": f.owner.email if f.owner else None,
+                "sha256": f.sha256
+            })
+    return {"received": results}

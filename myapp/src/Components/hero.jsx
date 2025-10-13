@@ -4,7 +4,7 @@ import { ReactTyped } from "react-typed";
 const Hero = () => {
   const navigate = useNavigate();
   return (
-    <div className='text-white'>
+    <div className='text-white bg-[#0b1220]'>
       <div className='max-w-[800px] mt-[-96px] w-full h-screen mx-auto text-center flex flex-col justify-center'>
         <h1 className='md:text-7xl sm:text-6xl text-4xl md:py-6'>
           Secure Collaboration. Simplified.

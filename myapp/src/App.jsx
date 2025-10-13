@@ -4,7 +4,7 @@ import Navbar from './Components/navbar'
 import {Toaster} from 'react-hot-toast'
 import Signin from './Components/signin'
 import Login from './Components/login'
-import Dashboard from './Components/dashboard'
+import Dashboard from './Pages/Dashboard'
 import {BrowserRouter as Router,Route,Routes} from "react-router-dom"
 function App() {
   //const [count, setCount] = useState(0)

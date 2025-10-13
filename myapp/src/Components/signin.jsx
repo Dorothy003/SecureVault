@@ -1,8 +1,8 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from '../Api/axios.js'; // ✅ make sure this file exists
+import axios from '../Api/axios.js';
 import toast from 'react-hot-toast';
+
 const SignUp = () => {
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const navigate = useNavigate();
@@ -14,15 +14,25 @@ const SignUp = () => {
   const handleSignUp = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('/auth/signup', form);
-      localStorage.setItem('token', res.data.token);
-      localStorage.setItem('user', JSON.stringify(res.data.user));
-      navigate('/personalPage');
-      toast.success("Signup Successfull")
-    } catch (error) {
-      toast.error("Error in SignUp")
-      console.log("Error in SignUp: ",error)
+     
+      await axios.post('/auth/register', form);
 
+  
+      const loginRes = await axios.post('/auth/login', {
+        email: form.email,
+        password: form.password,
+      });
+
+ 
+      localStorage.setItem('token', loginRes.data.access_token);
+      localStorage.setItem('user', JSON.stringify(loginRes.data.user));
+
+    
+      navigate('/dashboard');
+      toast.success("Signup & Login Successful");
+    } catch (error) {
+      toast.error("Error during Signup/Login");
+      console.log("Error in SignUp/Login:", error);
     }
   };
 
